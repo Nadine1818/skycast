@@ -133,6 +133,10 @@ const geocodeLocation = async (location) => {
         const normalizedLocation = String(location || '').trim();
         const alias = LOCATION_ALIAS_FALLBACKS[normalizedLocation.toLowerCase()];
 
+        if (!normalizedLocation) {
+            throw new Error('No city with this name');
+        }
+
         if (isCoordinateFormat(location)) {
             const coords = parseCoordinates(location);
             try {
@@ -223,15 +227,18 @@ const geocodeLocation = async (location) => {
         // Fallback 3: known location aliases
         if (alias) return alias;
 
-        throw new Error(`Unable to geocode location: ${normalizedLocation}`);
+        throw new Error('No city with this name');
     } catch (error) {
+        if (error.message === 'No city with this name') {
+            throw error;
+        }
         if (error.response?.status === 404) {
-            throw new Error(`Location not found: ${location}`);
+            throw new Error('No city with this name');
         }
         if (error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT') {
             throw new Error(`Geocoding timed out for ${location} after multiple retries`);
         }
-        throw new Error(`Geocoding Error: ${error.message}`);
+        throw new Error('No city with this name');
     }
 };
 

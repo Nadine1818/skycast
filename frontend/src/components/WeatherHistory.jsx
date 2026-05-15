@@ -37,7 +37,7 @@ const buttonBase = {
     transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease',
 };
 
-export const WeatherHistory = ({ onRecordDeleted }) => {
+export const WeatherHistory = ({ onRecordDeleted, refreshKey = 0 }) => {
     const [records, setRecords] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -49,7 +49,7 @@ export const WeatherHistory = ({ onRecordDeleted }) => {
 
     useEffect(() => {
         fetchRecords();
-    }, []);
+    }, [refreshKey]);
 
     useEffect(() => {
         if (editRecord) {
@@ -80,8 +80,8 @@ export const WeatherHistory = ({ onRecordDeleted }) => {
 
         try {
             await weatherAPI.deleteRecord(deleteRecord._id);
-            setRecords((current) => current.filter((record) => record._id !== deleteRecord._id));
             onRecordDeleted?.();
+            await fetchRecords();
             setDeleteRecord(null);
         } catch (err) {
             setError(err.response?.data?.message || err.response?.data?.error || err.message);

@@ -182,7 +182,10 @@ function App() {
 
                         {/* Weather History */}
                         <div style={{ marginTop: '3rem' }}>
-                            <WeatherHistory onRecordDeleted={() => setHistoryRefresh(prev => prev + 1)} />
+                            <WeatherHistory
+                                refreshKey={historyRefresh}
+                                onRecordDeleted={() => setHistoryRefresh((prev) => prev + 1)}
+                            />
                         </div>
 
                         {/* PM Accelerator Info */}

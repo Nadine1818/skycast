@@ -1,3 +1,5 @@
+// weather controller to handle all crud operations
+
 const WeatherData = require('../models/WeatherData');
 const {
     getWeatherByCoordinates,
